@@ -1,0 +1,92 @@
+<%= form_with(model: feedback, local: true) do |form| %>
+  <% if feedback.errors.any? %>
+    <div class="alert alert-danger">
+      <h4>Erros:</h4>
+      <ul>
+        <% feedback.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, class: 'form-label' %>
+    <%= form.text_field :title, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: 'form-label' %>
+    <%= form.text_area :description, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3 w-full d-flex justify-center items-center ml-auto">
+    <div class="stars w-full d-flex justify-center items-center ml-auto mr-auto" data-rating="0">
+      <% (1..5).each do |i| %>
+        <span class="star z-3" data-value="<%= i %>">&#9733;</span>
+      <% end %>
+    </div>
+    <%= form.hidden_field :rating, class: 'form-control', id: 'rating-input', in: 1..5, step: 1 %>
+  </div>
+
+  <div style="display: flex; gap: 10px; justify-content: center;">
+    <%= form.submit class: 'btn btn-primary' %>
+    <%= link_to 'Voltar', feedbacks_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating-input');
+    const starsContainer = document.querySelector('.stars');
+
+    stars.forEach(star => {
+      star.addEventListener('click', function() {
+        const rating = this.getAttribute('data-value');
+        ratingInput.value = rating; // Atualiza o valor do input escondido
+        starsContainer.setAttribute('data-rating', rating); // Atualiza o rating visual
+
+        // Remove a seleção das estrelas
+        stars.forEach(s => s.classList.remove('selected'));
+
+        // Marca as estrelas até a selecionada
+        for (let i = 0; i < rating; i++) {
+          stars[i].classList.add('selected');
+        }
+        
+        // Adiciona meia estrela, se necessário
+        if (rating % 1 !== 0) {
+          stars[Math.floor(rating)].classList.add('selected'); // Marca a estrela inteira
+        }
+      });
+
+      // Adiciona hover para mudar a cor das estrelas
+      star.addEventListener('mouseenter', function() {
+        const value = parseFloat(this.getAttribute('data-value'));
+        stars.forEach(s => {
+          const sValue = parseFloat(s.getAttribute('data-value'));
+          s.classList.toggle('selected', sValue <= value); // Marca estrelas até o valor
+        });
+      });
+
+      // Remove a seleção ao sair do mouse
+      star.addEventListener('mouseleave', function() {
+        const currentRating = parseFloat(ratingInput.value);
+        stars.forEach(s => {
+          const sValue = parseFloat(s.getAttribute('data-value'));
+          s.classList.toggle('selected', sValue <= currentRating); // Marca estrelas de acordo com a seleção atual
+        });
+      });
+    });
+
+    // Preencher estrelas com o rating passado
+    const initialRating = parseFloat(ratingInput.value);
+    if (initialRating > 0) {
+      stars.forEach(s => {
+        const sValue = parseFloat(s.getAttribute('data-value'));
+        s.classList.toggle('selected', sValue <= initialRating); // Marca estrelas de acordo com o rating inicial
+      });
+    }
+  });
+</script>

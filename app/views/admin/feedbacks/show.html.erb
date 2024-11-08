@@ -1,0 +1,19 @@
+<h1><%= @feedback.title %></h1>
+<%= @feedback.description %></p>
+
+<p>
+  <% (1..5).each do |i| %>
+    <% if i <= @feedback.rating.floor %>
+      <span style="color: gold; font-size: 1.5em;">&#9733;</span> <!-- Estrela cheia -->
+    <% elsif i - 0.5 == @feedback.rating %>
+      <span style="color: gold; font-size: 1.5em;">&#9734;</span> <!-- Meia estrela -->
+    <% else %>
+      <span style="color: lightgray; font-size: 1.5em;">&#9733;</span> <!-- Estrela vazia -->
+    <% end %>
+  <% end %>
+</p>
+
+<div style="display: flex; gap: 10px;">
+  <%= link_to 'Editar', edit_feedback_path(@feedback), class: 'btn btn-primary' %>
+  <%= link_to 'Voltar', feedbacks_path, class: 'btn btn-secondary' %>
+</div>

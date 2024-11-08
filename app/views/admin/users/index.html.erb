@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-between align-items-center">
+  <h1>Usuários</h1>
+  <%= form_with(url: admin_users_path, method: :get, class: "d-flex gap-2", local: true) do %>
+    <%= text_field_tag :query, params[:query], class: "form-control", placeholder: "Buscar usuários" %>
+    <%= select_tag :role, options_for_select(User.roles.keys.map { |role| [role.capitalize, role] }, params[:role]), include_blank: "Selecionar função", class: "form-select" %>
+    <%= submit_tag 'Buscar', class: "btn btn-primary" %>
+  <% end %>
+  <%= link_to 'Voltar', admin_dashboard_path, class: 'btn btn-secondary' %>
+</div>
+
+<div class="container">
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>Email</th>
+        <th>Função</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td class="align-middle"><%= user.email %></td>
+          <td class="align-middle"><%= user.role.capitalize %></td>
+          <td class="align-middle">
+            <%= link_to 'Editar', edit_admin_user_path(user), class: 'btn btn-warning text-white btn-sm' %>
+            <%= link_to 'Excluir', admin_user_path(user), method: :delete, data: true, class: 'btn btn-danger btn-sm', id: "delete-user-#{user.id}" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+  <%= paginate @users %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const deleteLinks = document.querySelectorAll('[id^="delete-user-"]');
+    
+    deleteLinks.forEach(link => {
+      link.addEventListener('click', function(event) {
+        event.preventDefault(); // Previne o comportamento padrão do link
+        
+        fetch(this.href, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content // Adiciona o token CSRF
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.reload();
+          } else {
+            window.location.reload();
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+        });
+      });
+    });
+  });
+</script>

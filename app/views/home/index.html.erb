@@ -1,0 +1,37 @@
+<div style="display: flex; gap: 20px; align-items: center;" class="mb-4 justify-content-between">
+  <h2 style="font-weight: bold;">Feedbacks Recentes</h2>
+  <a href="<%= new_feedback_path %>" class="btn btn-lg btn-primary" style="padding: 10px 20px; border-radius: 8px; background-color: #007bff;">
+    <i class="bi bi-pencil-square" style="margin-right: 5px;"></i> Deixar um Feedback
+  </a>
+</div>
+
+<div class="list-group">
+  <% @feedbacks.each do |feedback| %>
+    <a href="<%= feedback_path(feedback) %>" class="list-group-item list-group-item-action flex-column align-items-start mb-3" 
+       style="border: 1px solid #e0e0e0; border-radius: 8px; transition: box-shadow 0.3s ease;">
+      <div class="d-flex w-100 justify-content-between align-items-center">
+        <h5 class="mb-1" style="font-weight: bold; color: #333;"><%= feedback.title %></h5>
+        <small class="text-muted" style="font-size: 0.9rem;"><%= feedback.created_at.strftime("%d/%m/%Y") %></small>
+      </div>
+      <p class="mb-1" style="color: #666; line-height: 1.5;"><%= feedback.description.truncate(100) %></p>
+      <div class="d-flex align-items-center" style="margin-top: 8px;">
+        <% (1..5).each do |i| %>
+          <% if i <= feedback.rating.floor %>
+            <i class="bi bi-star-fill" style="color: gold; font-size: 1.2em;"></i>
+          <% elsif i - 0.5 == feedback.rating %>
+            <i class="bi bi-star-half" style="color: gold; font-size: 1.2em;"></i>
+          <% else %>
+            <i class="bi bi-star" style="color: lightgray; font-size: 1.2em;"></i>
+          <% end %>
+        <% end %>
+      </div>
+    </a>
+  <% end %>
+</div>
+
+<% if @feedbacks.empty? %>
+  <div class="alert alert-warning mt-3" role="alert" style="border-radius: 8px; text-align: center;">
+    <i class="bi bi-exclamation-triangle-fill" style="color: #ff9900; margin-right: 8px;"></i>
+    Não há feedbacks disponíveis no momento.
+  </div>
+<% end %>

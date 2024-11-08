@@ -1,0 +1,72 @@
+<div class="d-flex justify-content-between align-items-center">
+  <h1>Feedbacks</h1>
+  <%= form_with(url: admin_feedbacks_path, method: :get, class: "d-flex gap-2", local: true) do %>
+    <%= text_field_tag :query, params[:query], class: "form-control", placeholder: "Buscar feedbacks" %>
+    
+    <!-- Campos para o intervalo de datas -->
+    <%= date_field_tag :start_date, params[:start_date], class: "form-control", placeholder: "Data Início" %>
+    <%= date_field_tag :end_date, params[:end_date], class: "form-control", placeholder: "Data Fim" %>
+    
+    <%= submit_tag 'Buscar', class: "btn btn-primary" %>
+  <% end %>
+  <%= link_to 'Voltar', admin_dashboard_path, class: 'btn btn-secondary' %>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Data</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @feedbacks.each do |feedback| %>
+      <tr>
+        <td class="align-middle"><%= feedback.title %></td>
+        <td class="align-middle"><%= feedback.created_at.strftime("%d/%m/%Y") %></td>
+        <td class="align-middle">
+          <% if feedback.user_id == current_user.id %>
+            <%= link_to 'Editar', edit_admin_feedback_path(feedback), class: 'btn btn-primary btn-sm' %>
+          <% else %>
+            <%= link_to 'Visualizar', feedback_path(feedback), class: 'btn btn-info btn-sm' %>
+          <% end %>
+          <%= link_to 'Excluir', feedback, data: true, class: 'btn btn-danger btn-delete-feedback btn-sm' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="d-flex justify-content-center mt-4">
+  <%= paginate @feedbacks %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const deleteLinks = document.querySelectorAll('.btn-delete-feedback');
+    
+    deleteLinks.forEach(link => {
+      link.addEventListener('click', function(event) {
+        event.preventDefault(); // Previne o comportamento padrão do link
+        
+        fetch(this.href, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content // Adiciona o token CSRF
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.reload();
+          } else {
+            window.location.reload();
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+        });
+      });
+    });
+  });
+</script>

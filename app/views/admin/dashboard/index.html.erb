@@ -1,0 +1,64 @@
+<h2 class="text-center text-secondary display-4 mb-4" style="font-size: 2.5rem;">Painel Administrativo</h2>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-pill shadow-sm mb-4" style="border-radius: 20px !important;">
+        <div class="container-fluid">
+          <span class="navbar-brand mx-auto text-primary fs-4">Menu de Administração</span>
+        </div>
+      </nav>
+
+      <div class="row g-4">
+        <!-- Card Gerenciar Usuários -->
+        <div class="col-md-6">
+          <div class="card border-0 shadow-lg h-100 text-center rounded-4 transition-all">
+            <div class="card-body p-4">
+              <div class="icon-container mb-4 d-flex justify-content-center align-items-center">
+                <i class="bi bi-people-fill text-primary bg-light icon-circle"></i>
+              </div>
+              <h5 class="card-title text-secondary mb-2">Gerenciar Usuários</h5>
+              <p class="card-text text-muted mb-4">Adicione, edite e remova usuários.</p>
+              <%= link_to 'Acessar', admin_users_path, class: 'btn btn-outline-primary px-4 py-2 rounded-pill fw-bold' %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Gerenciar Feedbacks -->
+        <div class="col-md-6">
+          <div class="card border-0 shadow-lg h-100 text-center rounded-4 transition-all">
+            <div class="card-body p-4">
+              <div class="icon-container mb-4 d-flex justify-content-center align-items-center">
+                <i class="bi bi-chat-left-text-fill text-primary bg-light icon-circle"></i>
+              </div>
+              <h5 class="card-title text-secondary mb-2">Gerenciar Feedbacks</h5>
+              <p class="card-text text-muted mb-4">Veja e responda aos feedbacks.</p>
+              <%= link_to 'Acessar', admin_feedbacks_path, class: 'btn btn-outline-primary px-4 py-2 rounded-pill fw-bold' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  .icon-circle {
+    width: 60px;          /* Largura fixa para garantir o círculo */
+    height: 60px;         /* Altura igual para garantir proporção */
+    font-size: 1.5rem;    /* Tamanho do ícone */
+    padding: 12px;        /* Espaçamento interno para centralizar o ícone */
+    border-radius: 50%;   /* Borda arredondada para formar o círculo */
+    border: 2px solid #e0e0e0; /* Opcional: borda cinza */
+  }
+  .transition-all {
+    transition: all 0.3s ease-in-out;
+  }
+  .bi-people-fill::before {
+    vertical-align: -1px !important;
+  }
+</style>

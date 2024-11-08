@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Feedbacks</h1>
+  <%= form_with(url: feedbacks_path, method: :get, class: "d-flex gap-2", local: true) do %>
+    <%= text_field_tag :query, params[:query], class: "form-control", placeholder: "Buscar feedbacks" %>
+    <%= date_field_tag :start_date, params[:start_date], class: "form-control", placeholder: "Data inicial" %>
+    <%= date_field_tag :end_date, params[:end_date], class: "form-control", placeholder: "Data final" %>
+    <%= submit_tag 'Buscar', class: "btn btn-primary" %>
+  <% end %>
+  <a href="<%= new_feedback_path %>" class="btn btn-lg btn-primary" style="padding: 10px 20px; border-radius: 8px; background-color: #007bff;">
+    <i class="bi bi-pencil-square" style="margin-right: 5px;"></i> Novo Feedback
+  </a>
+</div>
+
+<div class="row">
+  <% @feedbacks.each do |feedback| %>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card shadow-sm h-100" style="border-radius: 8px;">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <h5 class="card-title text-primary mb-3 text-center">
+            <%= link_to feedback.title, feedback_path(feedback), class: "text-decoration-none text-dark" %>
+          </h5>
+
+          <p class="card-text text-muted mb-3" style="height: fit-content; text-align: center;">
+            <%= truncate(feedback.description, length: 100, separator: ' ') %>
+          </p>
+          
+          <p class="card-text text-muted small text-center">
+            <%= feedback.created_at.strftime("%d/%m/%Y") %>
+          </p>
+
+          <div class="d-flex align-items-center justify-content-center mb-2">
+            <% (1..5).each do |i| %>
+              <% if i <= feedback.rating.floor %>
+                <i class="bi bi-star-fill" style="color: gold; font-size: 1.2em;"></i>
+              <% elsif i - 0.5 == feedback.rating %>
+                <i class="bi bi-star-half" style="color: gold; font-size: 1.2em;"></i>
+              <% else %>
+                <i class="bi bi-star" style="color: lightgray; font-size: 1.2em;"></i>
+              <% end %>
+            <% end %>
+          </div>
+
+          <div class="d-flex justify-content-center gap-2 mt-2">
+            <% if current_user&.id == feedback.user_id %>
+              <%= link_to 'Editar', edit_feedback_path(feedback), class: 'btn btn-outline-primary btn-sm' %>
+              <%= link_to 'Excluir', feedback, method: :delete, data: { confirm: 'Tem certeza?' }, class: 'btn btn-outline-danger btn-sm' %>
+            <% else %>
+              <%= link_to 'Visualizar', feedback_path(feedback), class: 'btn btn-outline-secondary btn-sm' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>  
+  <% end %>
+</div>
+
+<% if @feedbacks.empty? %>
+  <div class="alert alert-warning mt-3" role="alert" style="border-radius: 8px; text-align: center;">
+    <i class="bi bi-exclamation-triangle-fill" style="color: #ff9900; margin-right: 8px;"></i>
+    Não há feedbacks disponíveis no momento.
+  </div>
+<% end %>
+
+<div class="d-flex justify-content-center mt-4">
+  <%= paginate @feedbacks %>
+</div>

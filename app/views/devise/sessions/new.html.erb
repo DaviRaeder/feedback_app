@@ -1,0 +1,52 @@
+<h2 class="text-center mb-4">Log in</h2>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "needs-validation", novalidate: true }) do |f| %>
+  <div class="form-group mb-3">
+    <%= f.label :email, class: "font-weight-bold" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= f.label :password, class: "font-weight-bold" %>
+    <div class="input-group">
+      <%= f.password_field :password, autocomplete: "current-password", class: "form-control", id: "password" %>
+      <div class="input-group-append">
+        <span class="input-group-text eye-icon" style="cursor: pointer; border-top-left-radius: 0; border-bottom-left-radius: 0;" onclick="togglePasswordVisibility('password', this)">
+          <i class="bi bi-eye" id="toggleIconPassword"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="form-check">
+      <%= f.check_box :remember_me, class: "form-check-input" %>
+      <%= f.label :remember_me, class: "form-check-label" %>
+    </div>
+  <% end %>
+
+  <div class="text-center mb-4">
+    <%= f.submit "Log in", class: "btn btn-primary btn-block" %>
+  </div>
+<% end %>
+
+<div class="text-center">
+  <%= link_to "Não tem conta? Faça registro", new_user_registration_path %>
+</div>
+
+<script>
+  function togglePasswordVisibility(fieldId, iconElement) {
+    const passwordField = document.getElementById(fieldId);
+    const icon = iconElement.querySelector('i');
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    } else {
+      passwordField.type = "password";
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  }
+</script>
