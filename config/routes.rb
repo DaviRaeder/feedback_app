@@ -3,7 +3,12 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations' }
 
-  resources :feedbacks, only: [:new, :edit, :create, :set_feedback, :update, :show, :destroy]
+  resources :feedbacks, except: [:index] do
+    member do
+      post :upvote, defaults: { format: :json }
+      post :downvote, defaults: { format: :json }
+    end
+  end
 
   get 'feedbacks', to: 'home#feedbacks'
 

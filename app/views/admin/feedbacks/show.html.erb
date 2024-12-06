@@ -14,6 +14,101 @@
 </p>
 
 <div style="display: flex; gap: 10px;">
+  <% if current_user&.id != @feedback.user_id %>
+    <div class="feedback-votes d-flex align-items-center gap-3" id="feedback-<%= feedback.id %>">
+      <button 
+        class="vote-btn upvote <%= 'active' if current_user.voted_up?(feedback) %>" 
+        id="upvote-<%= feedback.id %>" 
+        title="Curtir" 
+        onclick="handleUpvote(<%= feedback.id %>)"
+      >
+        <i class="bi bi-hand-thumbs-up"></i>
+        <span class="vote-count ups-count" id="upvote-count-<%= feedback.id %>"><%= feedback.ups.count %></span>
+      </button>
+
+      <button 
+        class="vote-btn downvote <%= 'active' if current_user.voted_down?(feedback) %>" 
+        id="downvote-<%= feedback.id %>" 
+        title="Não curtir" 
+        onclick="handleDownvote(<%= feedback.id %>)"
+      >
+        <i class="bi bi-hand-thumbs-down"></i>
+        <span class="vote-count downs-count" id="downvote-count-<%= feedback.id %>"><%= feedback.downs.count %></span>
+      </button>
+    </div>
+  <% end %>
+
   <%= link_to 'Editar', edit_feedback_path(@feedback), class: 'btn btn-primary' %>
+
   <%= link_to 'Voltar', feedbacks_path, class: 'btn btn-secondary' %>
 </div>
+
+<script>
+  async function handleUpvote(feedbackId) {
+    try {
+      const response = await fetch(`/feedbacks/${feedbackId}/upvote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error || "Erro ao votar para cima");
+        return;
+      }
+
+      const data = await response.json();
+      updateVoteCounts(feedbackId, data.ups_count, data.downs_count, "upvote");
+    } catch (error) {
+      console.error("Erro ao votar para cima:", error);
+    }
+  }
+
+  async function handleDownvote(feedbackId) {
+    try {
+      const response = await fetch(`/feedbacks/${feedbackId}/downvote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.error || "Erro ao votar para baixo");
+        return;
+      }
+
+      const data = await response.json();
+      updateVoteCounts(feedbackId, data.ups_count, data.downs_count, "downvote");
+    } catch (error) {
+      console.error("Erro ao votar para baixo:", error);
+    }
+  }
+
+  function updateVoteCounts(feedbackId, upsCount, downsCount, action) {
+    const feedbackElement = document.querySelector(`#feedback-${feedbackId}`);
+    if (feedbackElement) {
+      const upsElement = feedbackElement.querySelector(".ups-count");
+      const downsElement = feedbackElement.querySelector(".downs-count");
+      if (upsElement) upsElement.textContent = upsCount;
+      if (downsElement) downsElement.textContent = downsCount;
+
+      const upvoteButton = feedbackElement.querySelector(".vote-btn.upvote");
+      const downvoteButton = feedbackElement.querySelector(".vote-btn.downvote");
+
+      if (action === "upvote") {
+        upvoteButton.classList.add("active");
+        downvoteButton.classList.remove("active");
+      } else if (action === "downvote") {
+        downvoteButton.classList.add("active");
+        upvoteButton.classList.remove("active");
+      }
+    }
+  }
+
+</script>

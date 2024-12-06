@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_29_132731) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_03_110604) do
+  create_table "downs", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "feedback_id", null: false
+    t.index ["feedback_id"], name: "index_downs_on_feedback_id"
+    t.index ["user_id"], name: "index_downs_on_user_id"
+  end
+
   create_table "feedbacks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "title"
@@ -19,6 +28,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_29_132731) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
+  end
+
+  create_table "ups", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "feedback_id", null: false
+    t.index ["feedback_id"], name: "index_ups_on_feedback_id"
+    t.index ["user_id"], name: "index_ups_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -34,5 +52,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_29_132731) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "downs", "feedbacks"
+  add_foreign_key "downs", "users"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "ups", "feedbacks"
+  add_foreign_key "ups", "users"
 end

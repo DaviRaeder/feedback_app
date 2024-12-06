@@ -1,31 +1,76 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
 
- .stars {
+.stars {
   margin-left: auto;
   margin-right: auto;
- }
+}
 
- .star {
-  cursor: pointer; /* Muda o cursor para pointer */
-  font-size: 2rem; /* Tamanho das estrelas */
-  color: lightgray; /* Cor padrão das estrelas */
-  transition: color 0.2s; /* Transição suave para a cor */
+.star {
+  cursor: pointer;
+  font-size: 2rem;
+  color: lightgray;
+  transition: color 0.2s;
 }
 
 .star.selected {
   color: gold; /* Cor das estrelas selecionadas */
+}
+
+.feedback-votes {
+  display: flex;
+  gap: 1rem;
+  margin-right: 0.4rem;
+}
+
+.vote-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vote-btn i {
+  font-size: 1.2rem;
+}
+
+.vote-btn span.vote-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.vote-btn.upvote {
+  background-color: #e6f4ea;
+  color: #34a853;
+}
+
+.vote-btn.downvote {
+  background-color: #fde8e8;
+  color: #ea4335;
+}
+
+.vote-btn.upvote:hover {
+  background-color: #d1f0dd;
+}
+
+.vote-btn.downvote:hover {
+  background-color: #fbd1d1;
+}
+
+.vote-btn.active {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  font-weight: bold;
+  background-color: #b3efca !important;
+  color: #34a853 !important;
+}
+
+.vote-btn.downvote.active {
+  background-color: #fac5c5 !important;
+  color: #ea4335 !important;
 }
